@@ -25,7 +25,7 @@ public class PlayerTest {
 		assertEquals("Blue 3", player.getProperty(0).getName());
 		PropertyCell cell =
 			(PropertyCell) gameMaster.getGameBoard().queryCell("Blue 3");
-		assertSame(player, cell.getPlayer());
+		assertSame(player, cell.getOwner());
 	}
 
 	@Test

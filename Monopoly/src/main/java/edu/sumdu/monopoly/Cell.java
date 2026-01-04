@@ -3,14 +3,14 @@ package edu.sumdu.monopoly;
 public abstract class Cell {
 	private boolean available = true;
 	private String name;
-	protected Player player;
+	protected Player owner;
 
 	public String getName() {
 		return name;
 	}
 
-	public Player getPlayer() {
-		return player;
+	public Player getOwner() {
+		return owner;
 	}
 	
 	public int getPrice() {
@@ -31,8 +31,8 @@ public abstract class Cell {
 		this.name = name;
 	}
 
-	public void setPlayer(Player player) {
-		this.player = player;
+	public void setOwner(Player owner) {
+		this.owner = owner;
 	}
     
     public String toString() {

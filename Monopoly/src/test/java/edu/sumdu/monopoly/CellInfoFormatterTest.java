@@ -29,7 +29,7 @@ public class CellInfoFormatterTest {
         cell.setColorGroup(propertyColor);
         Player p = new Player();
         p.setName(ownerName);
-        cell.setPlayer(p);
+        cell.setOwner(p);
         cell.setNumHouses(numHouses);
         assertEquals(propertyLabel, InfoFormatter.cellInfo(cell));
     }
