@@ -201,12 +201,12 @@ public class MainWindowFx implements MonopolyGUI {
 
     @Override
     public RespondDialog openRespondDialog(TradeDeal deal) {
-        return null;
+        return new RespondDialogFx(stage, deal);
     }
 
     @Override
     public TradeDialog openTradeDialog() {
-        return null;
+        return new TradeDialogFx(stage);
     }
 
     @Override
