@@ -1,22 +1,24 @@
 package edu.sumdu.monopoly.gui.fx;
 
 import edu.sumdu.monopoly.*;
-
 import edu.sumdu.monopoly.gui.GameBoardUtil;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
-import edu.sumdu.monopoly.GameBoard;
 
 public class MainWindowFx implements MonopolyGUI {
 
     private final Stage stage;
     private final BorderPane root = new BorderPane();
+
     private final List<GUICellFx> guiCells = new ArrayList<>();
+    private GUICellFx[] boardCells;
+    private Circle[] playerTokens;
 
     private final GridPane northGrid = new GridPane();
     private final GridPane southGrid = new GridPane();
@@ -24,7 +26,6 @@ public class MainWindowFx implements MonopolyGUI {
     private final GridPane eastGrid  = new GridPane();
 
     private PlayerPanelFx[] playerPanels;
-
 
     public MainWindowFx(Stage stage) {
         this.stage = stage;
@@ -38,7 +39,54 @@ public class MainWindowFx implements MonopolyGUI {
         stage.show();
     }
 
-    // ===== Player panels (CENTER) =====
+    // ===== Game board =====
+
+    public void setupGameBoard(GameBoard board) {
+        var dimension = GameBoardUtil.calculateDimension(board.getCellNumber());
+
+        buildEdge(northGrid, GameBoardUtil.getNorthCells(board), true);
+        buildEdge(southGrid, GameBoardUtil.getSouthCells(board), true);
+        buildEdge(westGrid,  GameBoardUtil.getWestCells(board),  false);
+        buildEdge(eastGrid,  GameBoardUtil.getEastCells(board),  false);
+
+        root.setTop(northGrid);
+        root.setBottom(southGrid);
+        root.setLeft(westGrid);
+        root.setRight(eastGrid);
+
+        boardCells = guiCells.toArray(new GUICellFx[0]);
+
+        initPlayerTokens();
+        buildPlayerPanels();
+    }
+
+    private void buildEdge(GridPane grid, List<Cell> cells, boolean horizontal) {
+        grid.getChildren().clear();
+
+        for (int i = 0; i < cells.size(); i++) {
+            GUICellFx cellFx = new GUICellFx(cells.get(i));
+            guiCells.add(cellFx);
+
+            if (horizontal) {
+                grid.add(cellFx, i, 0);
+            } else {
+                grid.add(cellFx, 0, i);
+            }
+        }
+    }
+
+    private void initPlayerTokens() {
+        int players = GameMaster.instance().getNumberOfPlayers();
+        playerTokens = new Circle[players];
+
+        for (int i = 0; i < players; i++) {
+            Circle token = new Circle(8);
+            playerTokens[i] = token;
+            boardCells[0].getChildren().add(token); // стартова клітинка
+        }
+    }
+
+    // ===== Player panels =====
 
     private void buildPlayerPanels() {
         GameMaster master = GameMaster.instance();
@@ -56,7 +104,14 @@ public class MainWindowFx implements MonopolyGUI {
         }
     }
 
-    // ===== MonopolyGUI implementation (PARTIAL) =====
+    // ===== MonopolyGUI implementation =====
+
+    @Override
+    public void movePlayer(int index, int from, int to) {
+        Circle token = playerTokens[index];
+        boardCells[from].getChildren().remove(token);
+        boardCells[to].getChildren().add(token);
+    }
 
     @Override
     public void enableEndTurnBtn(int playerIndex) {
@@ -114,11 +169,21 @@ public class MainWindowFx implements MonopolyGUI {
         playerPanels[index].setTradeEnabled(b);
     }
 
-    // ===== Not implemented yet (INTENTIONALLY) =====
+    // ===== Stubs (ще не мігрували) =====
 
     @Override
     public int[] getDiceRoll() {
         throw new UnsupportedOperationException("Not implemented in JavaFX yet");
+    }
+
+    @Override
+    public RespondDialog openRespondDialog(TradeDeal deal) {
+        return null;
+    }
+
+    @Override
+    public TradeDialog openTradeDialog() {
+        return null;
     }
 
     @Override
@@ -134,18 +199,6 @@ public class MainWindowFx implements MonopolyGUI {
     @Override
     public int showUtilDiceRoll() {
         throw new UnsupportedOperationException("Not implemented in JavaFX yet");
-    }
-
-    @Override
-    public void startGame() {
-        buildPlayerPanels();
-    }
-
-    @Override
-    public void update() {
-        for (PlayerPanelFx panel : playerPanels) {
-            panel.displayInfo();
-        }
     }
 
     @Override
@@ -172,50 +225,14 @@ public class MainWindowFx implements MonopolyGUI {
     }
 
     @Override
-    public void movePlayer(int index, int from, int to) {
-
+    public void startGame() {
+        // nothing extra for FX
     }
 
     @Override
-    public RespondDialog openRespondDialog(TradeDeal deal) {
-        return null;
-    }
-
-    @Override
-    public TradeDialog openTradeDialog() {
-        return null;
-    }
-
-    public void setupGameBoard(GameBoard board) {
-        var dimension = GameBoardUtil.calculateDimension(board.getCellNumber());
-
-        buildEdge(northGrid, GameBoardUtil.getNorthCells(board), true);
-        buildEdge(southGrid, GameBoardUtil.getSouthCells(board), true);
-        buildEdge(westGrid,  GameBoardUtil.getWestCells(board),  false);
-        buildEdge(eastGrid,  GameBoardUtil.getEastCells(board),  false);
-
-        root.setTop(northGrid);
-        root.setBottom(southGrid);
-        root.setLeft(westGrid);
-        root.setRight(eastGrid);
-
-        buildPlayerPanels();
-    }
-
-    private void buildEdge(GridPane grid, List<Cell> cells, boolean horizontal) {
-        grid.getChildren().clear();
-
-        for (int i = 0; i < cells.size(); i++) {
-            GUICellFx view = new GUICellFx(cells.get(i));
-            guiCells.add(view);
-
-            if (horizontal) {
-                grid.add(view, i, 0);
-            } else {
-                grid.add(view, 0, i);
-            }
+    public void update() {
+        for (PlayerPanelFx panel : playerPanels) {
+            panel.displayInfo();
         }
     }
-
-
 }
