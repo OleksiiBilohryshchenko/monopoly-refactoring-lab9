@@ -17,17 +17,23 @@ public class RailRoadCell extends OwnedCell {
 		return RailRoadCell.price;
 	}
 
-	public int getRent() {
-		return RailRoadCell.baseRent * (int)Math.pow(2, owner.numberOfRR() - 1);
-	}
-	
-	public void playAction() {
-		Player currentPlayer = null;
-		if(!isAvailable()) {
-			currentPlayer = GameMaster.instance().getCurrentPlayer();
-			if(owner != currentPlayer) {
-				currentPlayer.payRentTo(owner, getRent());
+	@Override
+	protected int calculateRent() {
+		String[] monopolies = owner.getMonopolies();
+		int railroadsOwned = 0;
+
+		for (String monopoly : monopolies) {
+			if (COLOR_GROUP.equals(monopoly)) {
+				railroadsOwned++;
 			}
 		}
+
+		if (railroadsOwned == 0) {
+			return baseRent;
+		}
+
+		return baseRent * (int) Math.pow(2, railroadsOwned - 1);
 	}
+
+
 }

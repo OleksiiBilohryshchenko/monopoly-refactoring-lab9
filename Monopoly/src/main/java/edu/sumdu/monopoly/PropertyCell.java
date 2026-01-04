@@ -23,7 +23,8 @@ public class PropertyCell extends OwnedCell {
 		return sellPrice;
 	}
 
-	public int getRent() {
+	@Override
+	public int calculateRent() {
 		int rentToCharge = rent;
 		String [] monopolies = owner.getMonopolies();
 		rentToCharge = rentForMonopolies(monopolies, rentToCharge);
@@ -42,15 +43,6 @@ public class PropertyCell extends OwnedCell {
 		return rentToCharge;
 	}
 
-	public void playAction() {
-		Player currentPlayer = null;
-		if(!isAvailable()) {
-			currentPlayer = GameMaster.instance().getCurrentPlayer();
-			if(owner != currentPlayer) {
-				currentPlayer.payRentTo(owner, getRent());
-			}
-		}
-	}
 
 	public void setColorGroup(String colorGroup) {
 		this.colorGroup = colorGroup;

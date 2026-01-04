@@ -13,24 +13,13 @@ public class UtilityCell extends OwnedCell {
 		return UtilityCell.PRICE;
 	}
 
-	public int getRent(int diceRoll) {
-		if(owner.numberOfUtil() == 1) {
-			return diceRoll * 4;
-		} else if (owner.numberOfUtil() >= 2) {
-			return diceRoll * 10;
-		}
-		return 0;
-	}
+	@Override
+	protected int calculateRent() {
+		int diceRoll = GameMaster.instance().getUtilDiceRoll();
+		int utilitiesOwned = owner.numberOfUtil();
 
-	public void playAction() {
-		Player currentPlayer = null;
-		if(!isAvailable()) {
-			currentPlayer = GameMaster.instance().getCurrentPlayer();
-			if(owner != currentPlayer) {
-				GameMaster.instance().utilRollDice();
-				int diceRoll = GameMaster.instance().getUtilDiceRoll();
-				currentPlayer.payRentTo(owner, getRent(diceRoll));
-			}
-		}
+		return utilitiesOwned == 1 ? diceRoll * 4 : diceRoll * 10;
 	}
 }
+
+
