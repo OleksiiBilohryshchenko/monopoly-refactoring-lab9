@@ -19,16 +19,9 @@ public class RailRoadCell extends OwnedCell {
 
 	@Override
 	protected int calculateRent() {
-		String[] monopolies = owner.getMonopolies();
-		int railroadsOwned = 0;
+		int railroadsOwned = owner.numberOfRR();
 
-		for (String monopoly : monopolies) {
-			if (COLOR_GROUP.equals(monopoly)) {
-				railroadsOwned++;
-			}
-		}
-
-		if (railroadsOwned == 0) {
+		if (railroadsOwned <= 1) {
 			return baseRent;
 		}
 

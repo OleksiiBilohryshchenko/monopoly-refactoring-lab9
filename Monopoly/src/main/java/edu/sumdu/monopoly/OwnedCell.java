@@ -7,6 +7,10 @@ public abstract class OwnedCell extends Cell {
 
     protected abstract int calculateRent();
 
+    public int getRent() {
+        return calculateRent();
+    }
+
     @Override
     public boolean isAvailable() {
         return available;

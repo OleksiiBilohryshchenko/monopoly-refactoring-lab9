@@ -20,6 +20,12 @@ public class UtilityCell extends OwnedCell {
 
 		return utilitiesOwned == 1 ? diceRoll * 4 : diceRoll * 10;
 	}
+
+	public int getRent(int diceRoll) {
+		int utilitiesOwned = owner.numberOfUtil();
+		return utilitiesOwned == 1 ? diceRoll * 4 : diceRoll * 10;
+	}
+
 }
 
 
