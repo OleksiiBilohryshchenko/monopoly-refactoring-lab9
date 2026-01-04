@@ -4,6 +4,7 @@ import edu.sumdu.monopoly.*;
 import edu.sumdu.monopoly.gui.GameBoardUtil;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Circle;
@@ -195,7 +196,7 @@ public class MainWindowFx implements MonopolyGUI {
 
     @Override
     public int[] getDiceRoll() {
-        throw new UnsupportedOperationException("Not implemented in JavaFX yet");
+        return DiceRollDialogFx.show();
     }
 
     @Override
@@ -215,8 +216,13 @@ public class MainWindowFx implements MonopolyGUI {
 
     @Override
     public void showMessage(String msg) {
-        throw new UnsupportedOperationException("Not implemented in JavaFX yet");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Monopoly");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
     }
+
 
     @Override
     public int showUtilDiceRoll() {
