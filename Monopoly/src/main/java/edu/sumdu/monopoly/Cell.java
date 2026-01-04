@@ -1,7 +1,6 @@
 package edu.sumdu.monopoly;
 
 public abstract class Cell {
-	private boolean available = true;
 	private String name;
 
 	public String getName() {
@@ -20,14 +19,11 @@ public abstract class Cell {
 	}
 
 	public boolean isAvailable() {
-		return available;
+		return false;
 	}
-	
+
 	public abstract void playAction();
 
-	public void setAvailable(boolean available) {
-		this.available = available;
-	}
 	
 	void setName(String name) {
 		this.name = name;

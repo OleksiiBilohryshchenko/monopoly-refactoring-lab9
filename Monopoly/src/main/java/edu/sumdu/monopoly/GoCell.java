@@ -1,16 +1,16 @@
 package edu.sumdu.monopoly;
 
 public class GoCell extends Cell {
-    protected Player owner;
 
-    public GoCell() {
+	public GoCell() {
 		super.setName("Go");
-		setAvailable(false);
 	}
 
+	@Override
 	public void playAction() {
 	}
-	
+
+	@Override
 	void setName(String name) {
 	}
 }
