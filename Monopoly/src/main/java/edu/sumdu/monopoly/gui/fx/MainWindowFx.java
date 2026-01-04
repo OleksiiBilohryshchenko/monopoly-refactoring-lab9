@@ -2,6 +2,7 @@ package edu.sumdu.monopoly.gui.fx;
 
 import edu.sumdu.monopoly.*;
 import edu.sumdu.monopoly.gui.GameBoardUtil;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -29,7 +30,6 @@ public class MainWindowFx implements MonopolyGUI {
 
     public MainWindowFx(Stage stage) {
         this.stage = stage;
-
         Scene scene = new Scene(root, 1200, 800);
         stage.setTitle("Monopoly (JavaFX)");
         stage.setScene(scene);
@@ -39,25 +39,25 @@ public class MainWindowFx implements MonopolyGUI {
         stage.show();
     }
 
-    // ===== Game board =====
+    // ========= Game board =========
 
     public void setupGameBoard(GameBoard board) {
-        var dimension = GameBoardUtil.calculateDimension(board.getCellNumber());
+        Platform.runLater(() -> {
+            buildEdge(northGrid, GameBoardUtil.getNorthCells(board), true);
+            buildEdge(southGrid, GameBoardUtil.getSouthCells(board), true);
+            buildEdge(westGrid,  GameBoardUtil.getWestCells(board),  false);
+            buildEdge(eastGrid,  GameBoardUtil.getEastCells(board),  false);
 
-        buildEdge(northGrid, GameBoardUtil.getNorthCells(board), true);
-        buildEdge(southGrid, GameBoardUtil.getSouthCells(board), true);
-        buildEdge(westGrid,  GameBoardUtil.getWestCells(board),  false);
-        buildEdge(eastGrid,  GameBoardUtil.getEastCells(board),  false);
+            root.setTop(northGrid);
+            root.setBottom(southGrid);
+            root.setLeft(westGrid);
+            root.setRight(eastGrid);
 
-        root.setTop(northGrid);
-        root.setBottom(southGrid);
-        root.setLeft(westGrid);
-        root.setRight(eastGrid);
+            boardCells = guiCells.toArray(new GUICellFx[0]);
 
-        boardCells = guiCells.toArray(new GUICellFx[0]);
-
-        initPlayerTokens();
-        buildPlayerPanels();
+            initPlayerTokens();
+            buildPlayerPanels();
+        });
     }
 
     private void buildEdge(GridPane grid, List<Cell> cells, boolean horizontal) {
@@ -86,7 +86,7 @@ public class MainWindowFx implements MonopolyGUI {
         }
     }
 
-    // ===== Player panels =====
+    // ========= Player panels =========
 
     private void buildPlayerPanels() {
         GameMaster master = GameMaster.instance();
@@ -104,72 +104,94 @@ public class MainWindowFx implements MonopolyGUI {
         }
     }
 
-    // ===== MonopolyGUI implementation =====
+    // ========= MonopolyGUI =========
 
     @Override
     public void movePlayer(int index, int from, int to) {
-        Circle token = playerTokens[index];
-        boardCells[from].getChildren().remove(token);
-        boardCells[to].getChildren().add(token);
+        Platform.runLater(() -> {
+            Circle token = playerTokens[index];
+            boardCells[from].getChildren().remove(token);
+            boardCells[to].getChildren().add(token);
+        });
     }
 
     @Override
     public void enableEndTurnBtn(int playerIndex) {
-        playerPanels[playerIndex].setEndTurnEnabled(true);
+        Platform.runLater(() ->
+                playerPanels[playerIndex].setEndTurnEnabled(true)
+        );
     }
 
     @Override
     public void enablePlayerTurn(int playerIndex) {
-        playerPanels[playerIndex].setRollDiceEnabled(true);
+        Platform.runLater(() ->
+                playerPanels[playerIndex].setRollDiceEnabled(true)
+        );
     }
 
     @Override
     public void enablePurchaseBtn(int playerIndex) {
-        playerPanels[playerIndex].setPurchasePropertyEnabled(true);
+        Platform.runLater(() ->
+                playerPanels[playerIndex].setPurchasePropertyEnabled(true)
+        );
     }
 
     @Override
     public void setBuyHouseEnabled(boolean b) {
         int idx = GameMaster.instance().getCurrentPlayerIndex();
-        playerPanels[idx].setBuyHouseEnabled(b);
+        Platform.runLater(() ->
+                playerPanels[idx].setBuyHouseEnabled(b)
+        );
     }
 
     @Override
     public void setDrawCardEnabled(boolean b) {
         int idx = GameMaster.instance().getCurrentPlayerIndex();
-        playerPanels[idx].setDrawCardEnabled(b);
+        Platform.runLater(() ->
+                playerPanels[idx].setDrawCardEnabled(b)
+        );
     }
 
     @Override
     public void setEndTurnEnabled(boolean enabled) {
         int idx = GameMaster.instance().getCurrentPlayerIndex();
-        playerPanels[idx].setEndTurnEnabled(enabled);
+        Platform.runLater(() ->
+                playerPanels[idx].setEndTurnEnabled(enabled)
+        );
     }
 
     @Override
     public void setGetOutOfJailEnabled(boolean b) {
         int idx = GameMaster.instance().getCurrentPlayerIndex();
-        playerPanels[idx].setGetOutOfJailEnabled(b);
+        Platform.runLater(() ->
+                playerPanels[idx].setGetOutOfJailEnabled(b)
+        );
     }
 
     @Override
     public void setPurchasePropertyEnabled(boolean enabled) {
         int idx = GameMaster.instance().getCurrentPlayerIndex();
-        playerPanels[idx].setPurchasePropertyEnabled(enabled);
+        Platform.runLater(() ->
+                playerPanels[idx].setPurchasePropertyEnabled(enabled)
+        );
     }
 
     @Override
     public void setRollDiceEnabled(boolean b) {
         int idx = GameMaster.instance().getCurrentPlayerIndex();
-        playerPanels[idx].setRollDiceEnabled(b);
+        Platform.runLater(() ->
+                playerPanels[idx].setRollDiceEnabled(b)
+        );
     }
 
     @Override
     public void setTradeEnabled(int index, boolean b) {
-        playerPanels[index].setTradeEnabled(b);
+        Platform.runLater(() ->
+                playerPanels[index].setTradeEnabled(b)
+        );
     }
 
-    // ===== Stubs (ще не мігрували) =====
+    // ========= Stubs =========
 
     @Override
     public int[] getDiceRoll() {
@@ -226,13 +248,15 @@ public class MainWindowFx implements MonopolyGUI {
 
     @Override
     public void startGame() {
-        // nothing extra for FX
+        // FX init already done in setupGameBoard
     }
 
     @Override
     public void update() {
-        for (PlayerPanelFx panel : playerPanels) {
-            panel.displayInfo();
-        }
+        Platform.runLater(() -> {
+            for (PlayerPanelFx panel : playerPanels) {
+                panel.displayInfo();
+            }
+        });
     }
 }
