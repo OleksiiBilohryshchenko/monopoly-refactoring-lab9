@@ -2,8 +2,9 @@ package edu.sumdu.monopoly;
 
 public class JailCell extends Cell {
 	public static int BAIL = 50;
-	
-	public JailCell() {
+    protected Player owner;
+
+    public JailCell() {
 		setName("Jail");
 	}
 	

@@ -1,6 +1,7 @@
 package edu.sumdu.monopoly;
 
 public class CardCell extends Cell {
+    protected Player owner;
     private int type;
     
     public CardCell(int type, String name) {

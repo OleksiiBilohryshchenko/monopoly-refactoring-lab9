@@ -2,6 +2,8 @@ package edu.sumdu.monopoly;
 
 public abstract class OwnedCell extends Cell {
 
+    protected Player owner;
+
     protected abstract int calculateRent();
 
     @Override

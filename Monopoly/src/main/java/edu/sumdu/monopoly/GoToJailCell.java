@@ -1,8 +1,10 @@
 package edu.sumdu.monopoly;
 
 public class GoToJailCell extends Cell {
-	
-	public GoToJailCell() {
+
+    protected Player owner;
+
+    public GoToJailCell() {
 		setName("Go to Jail");
 	}
 
