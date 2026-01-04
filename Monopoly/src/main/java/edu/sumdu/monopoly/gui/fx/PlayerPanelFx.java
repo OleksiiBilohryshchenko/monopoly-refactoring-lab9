@@ -160,4 +160,21 @@ public class PlayerPanelFx extends BorderPane {
     public void setTradeEnabled(boolean b) {
         btnTrade.setDisable(!b);
     }
+
+    public boolean isDrawCardButtonEnabled() {
+        return btnDrawCard.isDisable() == false;
+    }
+
+    public boolean isEndTurnButtonEnabled() {
+        return btnEndTurn.isDisable() == false;
+    }
+
+    public boolean isGetOutOfJailButtonEnabled() {
+        return btnGetOutOfJail.isDisable() == false;
+    }
+
+    public boolean isTradeButtonEnabled() {
+        return btnTrade.isDisable() == false;
+    }
+
 }
